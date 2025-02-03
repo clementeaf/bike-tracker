@@ -100,21 +100,27 @@ bike-tracker/
 ## Rutas Disponibles
 
 Método 	 | Endpoint	                  | Descripción
-GET	     | /	                        | Verifica el estado del servidor.
+GET	     | /	                        | Verifica el estado del servidor
 ------------------------------------------------------------------------------------
 GET	     | /rides	                    | Obtiene todos los viajes registrados.
-POST	   | /rides	                    | Crea un nuevo viaje.
+POST	   | /rides/start	              | Crea un nuevo viaje.
+POST	   | /rides/end	                | Finaliza un viaje.
 GET	     | /rides/{id}	              | Obtiene un viaje específico por ID.
 -------------------------------------------------------------------------------------
 POST     | /users/register            | Registra un nuevo usuario.
 POST     | /users/login               | Inicia sesión con email y contraseña.
 POST     | /users/wallet              | Agrega saldo a la wallet de un usuario.
 GET      | /users/me                  | Obtiene la información actual del usuario autenticado.
-DELETE   | /users                     | Elimina la cuenta del usuario autenticado.
+DELETE   | /users/me/delete           | Elimina la cuenta del usuario autenticado.
 -------------------------------------------------------------------------------------
 POST	   | /wallet/transactions/add	  | Añade una transacción a la wallet del usuario.
 GET	     | /wallet/transactions	      | Obtiene el saldo actual de la wallet
 GET	     | /wallet	                  | Obtiene el estado actual de la wallet.
+-------------------------------------------------------------------------------------
+POST     | /bikes/register            | Genera una nueva bicicleta
+GET      | /bikes/available           | Obtiene arreglo de bicicletas disponibles
+PUT      | /bikes/status              | Modifica el status de una bicicleta
+
 
 ## Cómo Ejecutar el Proyecto
 Requisitos
@@ -139,3 +145,91 @@ Ejecuta el servidor:
     go run cmd/main.go
 El servidor estará disponible en:
     http://localhost:8080
+
+
+## Prueba de Rutas
+
+SignUp POST /users/register
+`  
+{
+    "name": "John Doe",
+    "email": "john@example.com",
+    "password": "123456"
+}
+`
+----------------------------------------
+
+LogIn POST /users/login
+`  
+{
+    "email": "john@example.com",
+    "password": "123456"
+}
+`
+----------------------------------------
+
+Get user info /users/me
+Headers: Authorization: Bearer Token
+
+----------------------------------------
+
+Delete User /users/me/delete
+Headers: X-User-ID
+         Authorization: Bearer Token
+
+----------------------------------------
+
+Post add found /wallet/transactions/add
+Headers: Authorization: Bearer Token
+Body:
+`  
+{
+    "wallet_id": "67a08d56c65ef3f2f8c483a8",
+    "user_id": "67a08d56c65ef3f2f8c483a7",
+    "amount": 100,
+    "type": "credit"
+}
+`
+
+----------------------------------------
+
+GET Wallet transactions /wallet/transactions
+Headers: X-User-ID
+         Authorization: Bearer Token
+
+----------------------------------------
+
+GET Wallet balance /wallet
+Headers: X-User-ID
+         Authorization: Bearer Token
+
+----------------------------------------
+
+GET Rides /rides
+
+----------------------------------------
+
+POST initiatie ride /rides/start
+Headers: Authorization: Bearer token
+`  
+{
+    "bike_id": "67a08dfac65ef3f2f8c483aa",
+    "start_coords": [
+        -33.4489,
+        -70.6693
+    ]
+}
+`
+----------------------------------------
+POST end ride /rides/end
+Headers: Authorization: Bearer token
+`  
+{
+    "ride_id": "67a0c5e4b417fddc74bf0ae0",
+    "end_coords": [
+        -33.4489,
+        -70.6693
+    ]
+}
+`
+----------------------------------------
